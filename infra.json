@@ -13,12 +13,20 @@
         "ImageId" : "ami-0015a39e4b7c0966f",
 		"UserData": {
           "Fn::Base64": {
-            "Fn::Join": ["", [
-              "#!/bin/bash -ex\n",
-              "curl -fsSL https://get.docker.com -o get-docker.sh",
-              "sudo sh get-docker.sh",
-              "sudo apt install --assume-yes docker-compose",
-            ]]
+            "Fn::Join": [
+			  "",
+			  [
+				  "#!/bin/bash\n",
+				  "echo \">>>>>>>>>>>>> START <<<<<<<<<<<<<\"\n",
+				  "curl -fsSL https://get.docker.com -o get-docker.sh\n",
+				  "echo \">>>>>>>>>>>>> TWO <<<<<<<<<<<<<\"\n",
+				  "sudo sh get-docker.sh\n",
+				  "echo \">>>>>>>>>>>>> THREE <<<<<<<<<<<<<\"\n",
+				  "sudo apt install --assume-yes docker-compose\n",
+				  "echo \">>>>>>>>>>>>> FOUR <<<<<<<<<<<<<\"\n",
+				  "curl -o docker-compose.yml https://gist.githubusercontent.com/robzhu/a127a6bce1ea25b01d40efb57ad1c26e/raw/30a2927a901dd614a518319cfeaa63a6bd2648a4/gistfile1.txt; sed -i 's/YOURSERVERNAME/GIMBOIDIA/' docker-compose.yml; sed -i 's/ATLEAST5CHARACTERS/bucklemyshoe/' docker-compose.yml; sudo docker-compose up\n"
+			  ]
+			]
           }
         }
       }

@@ -11,12 +11,13 @@
         "SecurityGroups" : [ { "Ref" : "InstanceSecurityGroup" } ],
         "KeyName" : "viking-ho",
         "ImageId" : "ami-0015a39e4b7c0966f",
+		"IamInstanceProfile": { "Ref" : "ValheimInstanceProfile" },
 		"UserData": {
           "Fn::Base64": {
             "Fn::Join": [
 			  "",
 			  [
-				  "#!/bin/bash\n",
+				  "#!/bin/bash -ex\n",
 				  "echo \">>>>>>>>>>>>> START <<<<<<<<<<<<<\"\n",
 				  "curl -fsSL https://get.docker.com -o get-docker.sh\n",
 				  "echo \">>>>>>>>>>>>> TWO <<<<<<<<<<<<<\"\n",
@@ -24,13 +25,44 @@
 				  "echo \">>>>>>>>>>>>> THREE <<<<<<<<<<<<<\"\n",
 				  "sudo apt install --assume-yes docker-compose\n",
 				  "echo \">>>>>>>>>>>>> FOUR <<<<<<<<<<<<<\"\n",
-				  "curl -o docker-compose.yml https://gist.githubusercontent.com/robzhu/a127a6bce1ea25b01d40efb57ad1c26e/raw/30a2927a901dd614a518319cfeaa63a6bd2648a4/gistfile1.txt; sed -i 's/YOURSERVERNAME/GIMBOIDIA/' docker-compose.yml; sed -i 's/ATLEAST5CHARACTERS/bucklemyshoe/' docker-compose.yml; sudo docker-compose up\n"
+				  "sudo apt install --assume-yes unzip\n",
+				  "echo \">>>>>>>>>>>>> FIVE <<<<<<<<<<<<<\"\n",
+				  "curl \"https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip\" -o \"awscliv2.zip\"\n",
+				  "echo \">>>>>>>>>>>>> SIX <<<<<<<<<<<<<\"\n",
+				  "unzip awscliv2.zip\n",
+				  "echo \">>>>>>>>>>>>> SEVEN <<<<<<<<<<<<<\"\n",
+				  "sudo ./aws/install\n",
+				  "echo \">>>>>>>>>>>>> EIGHT <<<<<<<<<<<<<\"\n",
+				  "mkdir -p ./valheim-server/config\n",
+				  "mkdir -p ./backups-ec2\n",
+				  "echo \">>>>>>>>>>>>> NINE <<<<<<<<<<<<<\"\n",
+				  "mkdir -p ./valheim-server/data\n",
+				  "echo \">>>>>>>>>>>>> TEN <<<<<<<<<<<<<\"\n",
+				  "cd ./valheim-server/\n",
+				  "echo \">>>>>>>>>>>>> ELEVEN <<<<<<<<<<<<<\"\n",
+				  "aws s3 cp s3://scrublife-valheim/valheim.env ./valheim-server/valheim.env\n",
+				  "echo \">>>>>>>>>>>>> TWELVE <<<<<<<<<<<<<\"\n",
+				  "aws s3 cp s3://scrublife-valheim/docker-compose.yml ./docker-compose.yml\n",
+				  "echo \">>>>>>>>>>>>> THIRTEEN <<<<<<<<<<<<<\"\n",
+				  "pwd; ls -a\n",
+				  "echo \">>>>>>>>>>>>> FOURTEEN <<<<<<<<<<<<<\"\n",
+				  "aws cp s3://scrublife-valheim/backups/worlds-20220224-230004.zip ./backups-ec2/worlds-20220224-230004.zip\n"
+				  "echo \">>>>>>>>>>>>> FIFTEEN <<<<<<<<<<<<<\"\n",
+				  "sudo docker-compose up"
 			  ]
 			]
           }
         }
       }
     },
+	
+	"ValheimInstanceProfile" : {
+	"Type" : "AWS::IAM::InstanceProfile",
+	"Properties" : {
+      "InstanceProfileName" : "ValheimInstanceProfile",
+      "Roles" : [ "ValheimBucketRole" ]
+	  }
+	},
 
     "InstanceSecurityGroup" : {
       "Type" : "AWS::EC2::SecurityGroup",

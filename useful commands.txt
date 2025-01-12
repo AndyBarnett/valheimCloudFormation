@@ -1,0 +1,12 @@
+INSTANCE_ID=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
+sudo cat /var/lib/cloud/instances/$INSTANCE_ID/user-data.txt
+sudo cat /var/log/cloud-init-output.log
+
+--parameters ParameterKey=UserData,ParameterValue=$(base64 -w0 setup-lnxcfg-user)
+
+
+aws cloudformation create-stack --capabilities CAPABILITY_NAMED_IAM --stack-name aaaaa --template-body file://infra.json
+aws cloudformation delete-stack --stack-name aaaaa
+
+https://www.youtube.com/watch?v=BXjydKPcX60
+https://www.youtube.com/watch?v=agDaS9jlrJg
